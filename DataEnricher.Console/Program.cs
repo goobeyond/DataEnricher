@@ -60,7 +60,7 @@ using (var reader = new StreamReader(Path.Combine(Directory.GetCurrentDirectory(
 
             if (iteration % batchSize == 0)
             {
-                Thread.Sleep(5000);
+                Thread.Sleep(60000); //put the process to sleep to prevent hitting rate limit.
             }
 
         }
