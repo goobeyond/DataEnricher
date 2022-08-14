@@ -12,14 +12,14 @@ The application goes through the input file line by line and attempts to read an
 The response from the GLEIF endpoint is cached for the duration of the run. This is to prevent hitting the rate-limit (60 calls per minute) too quickly. After every 60 rows, a pause is made via `Thread.Sleep` to make sure we don't hit the rate-limit.
 
 ## How to run
-The application will run as a console app. The input will be a file called `data.csv` in the root folder of the application. The output will be in the same folder, but called `enriched-data-<date>.csv`.
+Make sure the startup project is set to `DataEnricher.Console`. The input will be a file called `data.csv` in the root folder of the application. The output will be in the same folder, but called `enriched-data-<date>.csv`.
 
 ## Limitations
 The application is extremely rudimentary, missing a lot user friendly features. Also it could be further optimized by sleeping the app more effectively around the cache. We could also provide a status for the more larger data sets so the users can know when their enrichment is done.
 
 # Deployment
-The application itself can be set up to have ci/cd pipelines in azure DevOps and deployed as a function app. We can take advantage of azure insights to keep logs. We can setup alerts on the logs, to inform us when a transformation is failing.
+The application itself can be set up to have ci/cd pipelines in azure DevOps and deployed as a function app. We can take advantage of azure insights to keep logs. We can setup alerts on the logs, to inform us when transformations are failing.
 
-In its current form, this application can theoretically enrich an input of any size. If we were to implement a mechanism to display the progress of enrichment, we can create an endpoint that allows users to upload their file, where we will store in a cloud storage solution, spin up a new instance of this application per request and store the output in the cloud. Users can then download their enrciched data whenever they please.
+In its current form, this application can theoretically enrich an input of any size. If we were to implement a mechanism to display the progress of enrichment, we can create an endpoint that allows users to upload their file, where we will store in a cloud storage solution. This can be used as a trigger to run the function app, apply the enrichment, and store the new file back into the storage. Users can then download their enrciched data when its ready.
 
-There's a limitation with this approach, which is the time limit on the life of a function app. To address this we can make use of more sophisticated orchestrators such as the Azure Data Factory or Airflow.
+There's a limitation with this approach, which is the time limit on the life of a function app. To address this we can make use of more sophisticated orchestrators such as Airflow.
